@@ -6,6 +6,8 @@ from boto.sqs.message import Message
 from datetime import datetime
 
 import lob
+now = datetime.today().strftime('%Y/%m/%d %H:%M:%S')
+sys.stdout.write("%s: Started\n" % (now))
 
 AWS_ACCESS_KEY=''
 AWS_SECRET_KEY=''
