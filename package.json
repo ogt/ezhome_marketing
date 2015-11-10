@@ -1,0 +1,24 @@
+{
+  "name": "ezhome_marketing",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "analytics-node": "^2.0.0",
+    "aws-sdk": "^2.2.15",
+    "fs": "0.0.2",
+    "lob": "^3.5.0",
+    "mustache": "^2.2.0",
+    "node-uuid": "^1.4.3",
+    "pg": "^4.4.3",
+    "promise": "^7.0.4",
+    "raw-body": "^2.1.4",
+    "request": "^2.65.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
