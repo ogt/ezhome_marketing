@@ -1,7 +1,6 @@
 console.log('Loading function');
 
 var postgres_connection = '';
-var segment_key = '';
 var submission_queue_url = '';
 
 exports.log_mail_event = function(event, context) {
@@ -10,7 +9,6 @@ exports.log_mail_event = function(event, context) {
     var uuid = require('node-uuid');
 
     var Analytics = require('analytics-node');
-    var analytics = new Analytics(segment_key);
 
     pg.connect(postgres_connection,
         function(err, client, done) {
@@ -21,6 +19,8 @@ exports.log_mail_event = function(event, context) {
 
             for (var record_index = 0; record_index < event.Records.length; record_index++) {
                 data = JSON.parse(event.Records[record_index].Sns.Message);
+
+                var analytics = new Analytics(data.event.segment_key);
 
                 client.query("INSERT INTO postcard_marketing_log (name, address, campaign_name, region, template_parameters) VALUES ($1, $2, $3, $4, $5)",
                     [data.to.name, data.to.address_line1, data.campaign_name, data.region, JSON.stringify(data.parameters)],
@@ -38,9 +38,20 @@ exports.log_mail_event = function(event, context) {
                                 region: data.region
                             },
                             properties: {
-                                name: data.to.name,
+                                date: data.date,
                                 address: data.to.address_line1,
-                                template_parameters: data.template_parameters
+                                name: data.to.name,
+                                weekly: data.parameters.weekly,
+                                biweekly: data.parameters.biweekly,
+                                expires: data.event.expires,
+                                pdf_url: data.lob_response.url,
+                                blueprint_url: data.parameters.blueprint,
+                                size: data.event.size,
+                                cost: data.lob_response.price,
+                                provider: data.event.provider,
+                                campaign_name: data.campaign_name,
+                                batch_size: data.event.batch_size,
+                                touch: data.event.touch
                             }
                         });
 
@@ -141,7 +152,8 @@ exports.parse_csv = function(event, context) {
                             lob_api_key: event.lob_api_key,
                             campaign_name: campaign_name,
                             region: region,
-                            template_parameters: template_parameters[region]
+                            template_parameters: columns[20],
+                            event: event
                         });
 
                         if (parameters.length == 10) {

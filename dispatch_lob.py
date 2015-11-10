@@ -57,7 +57,8 @@ while 1:
             'campaign_name': parameters['campaign_name'],
             'region': parameters['region'],
             'parameters': parameters['template_parameters'],
-            'lob_response': result
+            'lob_response': result,
+            'event': parameters['event']
         })
         sns_connection.publish(topic = topic, message = message)
 
